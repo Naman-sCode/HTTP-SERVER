@@ -28,8 +28,16 @@ public class Main {
       OutputStream output = clientSocket.getOutputStream();
 
       if(httpRequest[1].equals("/")){
-        output.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
-      } else {
+        output.write("HTTP/1.1 200 OK\r\n\r\n".getBytes()); 
+      } else if(httpRequest[1].startsWith(line)){
+        String msg = httpRequest[1].substring(6);
+        String header = String.format(
+          "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s",
+          msg.length(), msg);
+          clientSocket.getOutputStream().write(header.getBytes());
+  
+
+      }else {
         output.write("HTTP/1.1 404 Not Found\r\n\r\n".getBytes());
       }
     } catch (IOException e) {
